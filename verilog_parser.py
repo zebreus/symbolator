@@ -25,7 +25,7 @@ verilog_tokens = {
   ],
   'parameters': [
     (r'\s*parameter\s*(signed|integer|realtime|real|time)?\s*(\[[^]]+\])?', 'parameter_start'),
-    (r'\s*(\w+)\s*=\s*(\w+)[^),;]*', 'param_item'),
+    (r'\s*(\w+)\s*=\s*([\w\']+)[^),;]*', 'param_item'),
     (r',', None),
     (r'[);]', None, '#pop'),
   ],
