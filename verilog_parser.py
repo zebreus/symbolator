@@ -160,8 +160,8 @@ def parse_verilog(text):
       ptype = new_ptype
 
     elif action == 'param_item':
-      name, default_value = groups
-      generics.append(VerilogParameter(name, 'in', ptype, default_value))
+      param_name, default_value = groups
+      generics.append(VerilogParameter(param_name, 'in', ptype, default_value))
 
     elif action == 'module_port_start':
       new_mode, net_type, signed, vec_range = groups
