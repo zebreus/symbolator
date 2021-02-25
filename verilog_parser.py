@@ -25,7 +25,7 @@ verilog_tokens = {
   ],
   'parameters': [
     (r'\s*parameter\s*(signed|integer|realtime|real|time)?\s*(\[[^]]+\])?', 'parameter_start'),
-    (r'\s*(\w+)[^),;]*', 'param_item'),
+    (r'\s*(\w+)\s*=\s*(\w+)[^),;]*', 'param_item'),
     (r',', None),
     (r'[);]', None, '#pop'),
   ],
@@ -160,7 +160,8 @@ def parse_verilog(text):
       ptype = new_ptype
 
     elif action == 'param_item':
-      generics.append(VerilogParameter(groups[0], 'in', ptype))
+      name, default_value = groups
+      generics.append(VerilogParameter(name, 'in', ptype, default_value))
 
     elif action == 'module_port_start':
       new_mode, net_type, signed, vec_range = groups
