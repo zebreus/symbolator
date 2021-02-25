@@ -32,6 +32,7 @@ verilog_tokens = {
   'module_port': [
     (r'\s*(input|inout|output)\s*(reg|supply0|supply1|tri|triand|trior|tri0|tri1|wire|wand|wor)?\s*(signed)?\s*(\[[^]]+\])?', 'module_port_start'),
     (r'\s*(\w+)\s*,?', 'port_param'),
+    (r'/\*', 'block_comment', 'block_comment'),
     (r'[);]', None, '#pop'),
     (r'//#\s*{{(.*)}}\n', 'section_meta'),
     (r'//.*\n', None),
