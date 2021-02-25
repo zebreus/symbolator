@@ -114,7 +114,8 @@ def parse_verilog(text):
   kind = None
   saved_type = None
   mode = 'input'
-  ptype = 'wire'
+  port_type = 'wire'
+  param_type = ''
 
   metacomments = []
   parameters = []
@@ -151,35 +152,35 @@ def parse_verilog(text):
     elif action == 'parameter_start':
       net_type, vec_range = groups
 
-      new_ptype = ''
+      new_param_type = ''
       if net_type is not None:
-        new_ptype += net_type
+        new_param_type += net_type
 
       if vec_range is not None:
-        new_ptype += ' ' + vec_range
+        new_param_type += ' ' + vec_range
 
-      ptype = new_ptype
+      param_type = new_param_type
 
     elif action == 'param_item':
       param_name, default_value = groups
-      generics.append(VerilogParameter(param_name, 'in', ptype, default_value))
+      generics.append(VerilogParameter(param_name, 'in', param_type, default_value))
 
     elif action == 'module_port_start':
       new_mode, net_type, signed, vec_range = groups
 
-      new_ptype = ''
+      new_port_type = ''
       if net_type is not None:
-        new_ptype += net_type
+        new_port_type += net_type
 
       if signed is not None:
-        new_ptype += ' ' + signed
+        new_port_type += ' ' + signed
 
       if vec_range is not None:
-        new_ptype += ' ' + vec_range
+        new_port_type += ' ' + vec_range
 
       # Complete pending items
       for i in param_items:
-        ports[i] = VerilogParameter(i, mode, ptype)
+        ports[i] = VerilogParameter(i, mode, port_type)
 
       param_items = []
       if len(ports) > 0:
@@ -187,7 +188,7 @@ def parse_verilog(text):
 
       # Start with new mode
       mode = new_mode
-      ptype = new_ptype
+      port_type = new_port_type
 
     elif action == 'port_param':
       ident = groups[0]
@@ -198,7 +199,7 @@ def parse_verilog(text):
     elif action == 'end_module':
       # Finish any pending ports
       for i in param_items:
-        ports[i] = VerilogParameter(i, mode, ptype)
+        ports[i] = VerilogParameter(i, mode, port_type)
 
       vobj = VerilogModule(name, ports.values(), generics, dict(sections), metacomments)
       objects.append(vobj)
