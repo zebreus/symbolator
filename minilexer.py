@@ -61,6 +61,7 @@ class MiniLexer(object):
         if m:
           if action:
             #print('## MATCH: {} -> {}'.format(m.group(), action))
+            #print(m.string[m.pos:m.endpos])
             yield (pos, m.end()-1), action, m.groups()
 
           pos = m.end()
