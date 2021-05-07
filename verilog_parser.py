@@ -17,7 +17,7 @@ verilog_tokens = {
   ],
   'module': [
     (r'parameter\s*(signed|integer|realtime|real|time)?\s*(\[[^]]+\])?', 'parameter_start', 'parameters'),
-    (r'^[\(\s]*(input|inout|output)\s+(reg|supply0|supply1|tri|triand|trior|tri0|tri1|wire|wand|wor)?\s*(signed)?\s*(\[[^]]+\])?', 'module_port_start', 'module_port'),
+    (r'^[\(\s]*(input|inout|output)\s+(reg|supply0|supply1|tri|triand|trior|tri0|tri1|wire|wand|wor)?\s*(signed)?\s*((\[[^]]+\])+)?', 'module_port_start', 'module_port'),
     (r'endmodule', 'end_module', '#pop'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'//#\s*{{(.*)}}\n', 'section_meta'),
@@ -30,7 +30,7 @@ verilog_tokens = {
     (r'[);]', None, '#pop'),
   ],
   'module_port': [
-    (r'\s*(input|inout|output)\s+(reg|supply0|supply1|tri|triand|trior|tri0|tri1|wire|wand|wor)?\s*(signed)?\s*(\[[^]]+\])?', 'module_port_start'),
+    (r'\s*(input|inout|output)\s+(reg|supply0|supply1|tri|triand|trior|tri0|tri1|wire|wand|wor)?\s*(signed)?\s*((\[[^]]+\])+)?', 'module_port_start'),
     (r'\s*(\w+)\s*,?', 'port_param'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'[);]', None, '#pop'),
@@ -166,7 +166,7 @@ def parse_verilog(text):
       generics.append(VerilogParameter(param_name, 'in', param_type, default_value))
 
     elif action == 'module_port_start':
-      new_mode, net_type, signed, vec_range = groups
+      new_mode, net_type, signed, vec_range = groups[0:4]
 
       new_port_type = ''
       if net_type is not None:
