@@ -54,7 +54,7 @@ class VerilogObject(object):
   def __init__(self, name, desc=None):
     self.name = name
     self.kind = 'unknown'
-    self.desc = desc
+    self.desc = [] if desc is None else desc
 
 class VerilogParameter(object):
   '''Parameter and port to a module'''
@@ -63,7 +63,7 @@ class VerilogParameter(object):
     self.mode = mode
     self.data_type = data_type
     self.default_value = default_value
-    self.desc = desc
+    self.desc = [] if desc is None else desc
 
   def __str__(self):
     if self.mode is not None:
@@ -138,7 +138,7 @@ def parse_verilog(text):
       if last_item is None:
         metacomments.append(comment)
       else:
-        last_item.desc = comment
+        last_item.desc.append(comment)
 
     if action == 'section_meta':
       sections.append((port_param_index, groups[0]))
