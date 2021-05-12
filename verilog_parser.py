@@ -4,7 +4,7 @@
 from __future__ import print_function
 
 import re, os, io, ast, pprint, collections
-from minilexer import MiniLexer
+from hdlparse.minilexer import MiniLexer
 
 '''Verilog documentation parser'''
 
