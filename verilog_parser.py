@@ -10,7 +10,10 @@ from collections import OrderedDict
 '''Verilog documentation parser'''
 
 verilog_tokens = {
+  # state
   'root': [
+    # patterns
+    #  pattern, action, new_state
     (r'\bmodule\s+(\w+)\s*', 'module', 'module'),
     (r'/\*', 'block_comment', 'block_comment'),
     (r'//#+(.*)\n', 'metacomment'),
@@ -29,6 +32,7 @@ verilog_tokens = {
     (r'\s*(\w+)\s*=\s*((?:(?!\/\/|[,)]).)*)', 'param_item'),
     (r'//#+(.*)\n', 'metacomment'),
     (r',', None),
+    (r'//.*\n', None),
     (r'[);]', None, '#pop'),
   ],
   'module_port': [
@@ -133,6 +137,9 @@ def parse_verilog(text):
   objects = []
 
   for pos, action, groups in lex.run(text):
+
+    print (pos, action, groups)
+
     if action == 'metacomment':
       comment = groups[0].strip()
       if last_item is None:
