@@ -149,9 +149,6 @@ def parse_verilog(text):
     objects = []
 
     for pos, action, groups in lex.run(text):
-
-        print(pos, action, groups)
-
         if action == 'metacomment':
             comment = groups[0].strip()
             if last_item is None:

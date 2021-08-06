@@ -4,10 +4,16 @@
 from __future__ import print_function
 
 import re
+import logging
 
 """Minimalistic lexer engine inspired by the PyPigments RegexLexer"""
 
 __version__ = '1.0.7'
+
+log = logging.getLogger(__name__)
+handler = logging.StreamHandler()
+handler.setFormatter(logging.Formatter('%(name)s - %(levelname)s - %(message)s'))
+log.addHandler(handler)
 
 
 class MiniLexer(object):
@@ -62,8 +68,8 @@ class MiniLexer(object):
                 m = pat.match(text, pos)
                 if m:
                     if action:
-                        # print('## MATCH: {} -> {}'.format(m.group(), action))
-                        # print(m.string[m.pos:m.endpos])
+                        log.debug('Match: {} -> {}'.format(m.group().strip(), action))
+
                         yield (pos, m.end() - 1), action, m.groups()
 
                     pos = m.end()
@@ -74,7 +80,6 @@ class MiniLexer(object):
                         else:
                             stack.append(new_state)
 
-                        # print('## CHANGE STATE:', pos, new_state, stack)
                         patterns = self.tokens[stack[-1]]
 
                     break
