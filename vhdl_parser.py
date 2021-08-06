@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2017 Kevin Thibedeau
 # Distributed under the terms of the MIT license
-from __future__ import print_function
-
-import re, os, io, ast
+import ast
+import io
+import os
+import re
 from pprint import pprint
+
 from hdlparse.minilexer import MiniLexer
 
 """VHDL documentation parser"""
