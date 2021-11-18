@@ -94,6 +94,7 @@ vhdl_tokens = {
   'architecture': [
     (r'end\s+\w+\s*;', 'end_arch', '#pop'),
     (r'/\*', 'block_comment', 'block_comment'),
+    (r'type\s+(\w+)\s*is', 'type', 'type_decl'),
     (r'--.*\n', None),
   ],
   'generic_list': [
