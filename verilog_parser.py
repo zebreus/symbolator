@@ -59,7 +59,7 @@ verilog_tokens = {
 VerilogLexer = MiniLexer(verilog_tokens)
 
 
-class VerilogObject(object):
+class VerilogObject:
     """Base class for parsed Verilog objects"""
 
     def __init__(self, name, desc=None):
@@ -68,7 +68,7 @@ class VerilogObject(object):
         self.desc = [] if desc is None else desc
 
 
-class VerilogParameter(object):
+class VerilogParameter:
     """Parameter and port to a module"""
 
     def __init__(self, name, mode=None, data_type=None, default_value=None, desc=None):
@@ -229,7 +229,7 @@ def is_verilog(fname):
     return os.path.splitext(fname)[1].lower() in ('.vlog', '.v')
 
 
-class VerilogExtractor(object):
+class VerilogExtractor:
     """Utility class that caches parsed objects"""
 
     def __init__(self):

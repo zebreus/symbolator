@@ -157,7 +157,7 @@ vhdl_tokens = {
 VhdlLexer = MiniLexer(vhdl_tokens, flags=re.MULTILINE | re.IGNORECASE)
 
 
-class VhdlObject(object):
+class VhdlObject:
     """Base class for parsed VHDL objects
 
     Args:
@@ -171,7 +171,7 @@ class VhdlObject(object):
         self.desc = desc
 
 
-class VhdlParameter(object):
+class VhdlParameter:
     """Parameter to subprograms, ports, and generics
 
     Args:
@@ -207,7 +207,7 @@ class VhdlParameter(object):
                                                         self.data_type.name + self.data_type.arange)
 
 
-class VhdlParameterType(object):
+class VhdlParameterType:
     """Parameter type definition
 
     Args:
@@ -684,7 +684,7 @@ def is_vhdl(fname):
     return os.path.splitext(fname)[1].lower() in ('.vhdl', '.vhd')
 
 
-class VhdlExtractor(object):
+class VhdlExtractor:
     """Utility class that caches parsed objects and tracks array type definitions
 
     Args:
