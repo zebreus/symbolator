@@ -8,7 +8,7 @@ import re
 from pprint import pprint
 from hdlparse.minilexer import MiniLexer
 
-'''VHDL documentation parser'''
+"""VHDL documentation parser"""
 
 vhdl_tokens = {
     'root': [
