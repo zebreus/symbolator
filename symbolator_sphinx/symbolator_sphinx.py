@@ -15,6 +15,7 @@
 import re
 import codecs
 import posixpath
+from errno import ENOENT, EPIPE, EINVAL
 from os import path
 from subprocess import Popen, PIPE
 from hashlib import sha1
@@ -30,7 +31,7 @@ from sphinx.errors import SphinxError
 from sphinx.locale import _, __
 from sphinx.util import logging
 from sphinx.util.i18n import search_image_for_language
-from sphinx.util.osutil import ensuredir, ENOENT, EPIPE, EINVAL
+from sphinx.util.osutil import ensuredir
 
 if False:
     # For type annotation
