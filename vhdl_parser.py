@@ -136,6 +136,7 @@ vhdl_tokens = {
         (r'\n\s*\)\s*;\s*--(.*)\n', 'port_list_comment', '#pop:2'),
         (r'\n\s*', None),
         (r'\)\s*;', 'end_port', '#pop:2'),
+
         (r'--#(.*)\n', 'metacomment'),
         (r'/\*', 'block_comment', 'block_comment'),
     ],
@@ -193,18 +194,20 @@ class VhdlParameter:
 
     def __str__(self):
         if self.mode is not None:
-            param = '{} : {} {}'.format(self.name, self.mode, self.data_type.name + self.data_type.arange)
+            param = f"{self.name} : {self.mode} {self.data_type.name + self.data_type.arange}"
         else:
-            param = '{} : {}'.format(self.name, self.data_type.name + self.data_type.arange)
+            param = f"{self.name} : {self.data_type.name + self.data_type.arange}"
+
         if self.default_value is not None:
-            param = '{} := {}'.format(param, self.default_value)
+            param = f"{param} := {self.default_value}"
+
         if self.param_desc is not None:
-            param = '{} --{}'.format(param, self.param_desc)
+            param = f"{param} --{self.param_desc}"
+
         return param
 
     def __repr__(self):
-        return "VhdlParameter('{}', '{}', '{}')".format(self.name, self.mode,
-                                                        self.data_type.name + self.data_type.arange)
+        return f"VhdlParameter('{self.name}', '{self.mode}', '{self.data_type.name + self.data_type.arange}')"
 
 
 class VhdlParameterType:
@@ -226,7 +229,7 @@ class VhdlParameterType:
         self.arange = arange
 
     def __repr__(self):
-        return "VhdlParameterType('{}','{}')".format(self.name, self.arange)
+        return f"VhdlParameterType('{self.name}','{self.arange}')"
 
 
 class VhdlPackage(VhdlObject):
@@ -259,7 +262,7 @@ class VhdlType(VhdlObject):
         self.type_of = type_of
 
     def __repr__(self):
-        return "VhdlType('{}', '{}')".format(self.name, self.type_of)
+        return f"VhdlType('{self.name}', '{self.type_of}')"
 
 
 class VhdlSubtype(VhdlObject):
@@ -279,7 +282,7 @@ class VhdlSubtype(VhdlObject):
         self.base_type = base_type
 
     def __repr__(self):
-        return "VhdlSubtype('{}', '{}')".format(self.name, self.base_type)
+        return f"VhdlSubtype('{self.name}', '{self.base_type}')"
 
 
 class VhdlConstant(VhdlObject):
@@ -299,7 +302,7 @@ class VhdlConstant(VhdlObject):
         self.base_type = base_type
 
     def __repr__(self):
-        return "VhdlConstant('{}', '{}')".format(self.name, self.base_type)
+        return f"VhdlConstant('{self.name}', '{self.base_type}')"
 
 
 class VhdlFunction(VhdlObject):
@@ -321,7 +324,7 @@ class VhdlFunction(VhdlObject):
         self.return_type = return_type
 
     def __repr__(self):
-        return "VhdlFunction('{}')".format(self.name)
+        return f"VhdlFunction('{self.name}')"
 
 
 class VhdlProcedure(VhdlObject):
@@ -341,7 +344,7 @@ class VhdlProcedure(VhdlObject):
         self.parameters = parameters
 
     def __repr__(self):
-        return "VhdlProcedure('{}')".format(self.name)
+        return f"VhdlProcedure('{self.name}')"
 
 
 class VhdlEntity(VhdlObject):
@@ -362,12 +365,12 @@ class VhdlEntity(VhdlObject):
         self.sections = sections if sections is not None else {}
 
     def __repr__(self):
-        return "VhdlEntity('{}')".format(self.name)
+        return f"VhdlEntity('{self.name}')"
 
     def dump(self):
-        print('VHDL entity: {}'.format(self.name))
+        print(f"VHDL entity: {self.name}")
         for p in self.ports:
-            print('\t{} ({}), {} ({})'.format(p.name, type(p.name), p.data_type, type(p.data_type)))
+            print(f"\t{p.name} ({type(p.name)}), {p.data_type} ({type(p.data_type)})")
 
 
 class VhdlComponent(VhdlObject):
@@ -391,12 +394,12 @@ class VhdlComponent(VhdlObject):
         self.sections = sections if sections is not None else {}
 
     def __repr__(self):
-        return "VhdlComponent('{}')".format(self.name)
+        return f"VhdlComponent('{self.name}')"
 
     def dump(self):
-        print('VHDL component: {}'.format(self.name))
+        print(f"VHDL component: {self.name}")
         for p in self.ports:
-            print('\t{} ({}), {} ({})'.format(p.name, type(p.name), p.data_type, type(p.data_type)))
+            print(f"\t{p.name} ({type(p.name)}), {p.data_type} ({type(p.data_type)})")
 
 
 def parse_vhdl_file(fname):
@@ -641,12 +644,12 @@ def subprogram_prototype(vo):
 
     if isinstance(vo, VhdlFunction):
         if len(vo.parameters) > 0:
-            proto = 'function {}({}) return {};'.format(vo.name, plist, vo.return_type)
+            proto = f"function {vo.name}({plist}) return {vo.return_type};"
         else:
-            proto = 'function {} return {};'.format(vo.name, vo.return_type)
+            proto = f"function {vo.name} return {vo.return_type};"
 
     else:  # procedure
-        proto = 'procedure {}({});'.format(vo.name, plist)
+        proto = f"procedure {vo.name}({plist});"
 
     return proto
 
@@ -665,10 +668,10 @@ def subprogram_signature(vo, fullname=None):
 
     if isinstance(vo, VhdlFunction):
         plist = ','.join(p.data_type for p in vo.parameters)
-        sig = '{}[{} return {}]'.format(fullname, plist, vo.return_type)
+        sig = f"{fullname}[{plist} return {vo.return_type}]"
     else:  # procedure
         plist = ','.join(p.data_type for p in vo.parameters)
-        sig = '{}[{}]'.format(fullname, plist)
+        sig = f"{fullname}[{plist}]"
 
     return sig
 

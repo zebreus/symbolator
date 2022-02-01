@@ -66,7 +66,7 @@ class MiniLexer(object):
                 m = pat.match(text, pos)
                 if m:
                     if action:
-                        log.debug('Match: {} -> {}'.format(m.group().strip(), action))
+                        log.debug(f"Match: {m.group().strip()} -> {action}")
 
                         yield (pos, m.end() - 1), action, m.groups()
 

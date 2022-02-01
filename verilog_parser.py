@@ -80,15 +80,15 @@ class VerilogParameter:
 
     def __str__(self):
         if self.mode is not None:
-            param = '{} : {} {}'.format(self.name, self.mode, self.data_type)
+            param = f"{self.name} : {self.mode} {self.data_type}"
         else:
-            param = '{} : {}'.format(self.name, self.data_type)
+            param = f"{self.name} : {self.data_type}"
         if self.default_value is not None:
-            param = '{} := {}'.format(param, self.default_value)
+            param = f"{param} := {self.default_value}"
         return param
 
     def __repr__(self):
-        return "VerilogParameter('{}')".format(self.name)
+        return f"VerilogParameter('{self.name}')"
 
 
 class VerilogModule(VerilogObject):
@@ -103,7 +103,7 @@ class VerilogModule(VerilogObject):
         self.sections = sections if sections is not None else {}
 
     def __repr__(self):
-        return "VerilogModule('{}') {}".format(self.name, self.ports)
+        return f"VerilogModule('{self.name}') {self.ports}"
 
 
 def parse_verilog_file(fname):
