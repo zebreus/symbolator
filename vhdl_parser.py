@@ -6,7 +6,8 @@ import io
 import os
 import re
 from pprint import pprint
-from hdlparse.minilexer import MiniLexer
+from typing import List, Optional
+from .minilexer import MiniLexer
 
 """VHDL documentation parser"""
 
@@ -171,20 +172,48 @@ class VhdlObject:
         self.kind = 'unknown'
         self.desc = desc
 
+def remove_outer_parenthesis(s: Optional[str]):
+    if s:
+        n = 1
+        while n:
+            s, n = re.subn(r'\([^()]*\)', '', s.strip())  # remove non-nested/flat balanced parts
+    return s
+
+class VhdlParameterType:
+    """Parameter type definition
+
+    Args:
+      name (str): Name of the type
+      direction(str): "to" or "downto"
+      r_bound (str): A simple expression based on digits or variable names
+      l_bound (str): A simple expression based on digits or variable names
+      arange (str): Original array range string
+    """
+
+    def __init__(self, name, direction="", r_bound="", l_bound="", arange=""):
+        self.name = name
+        self.direction = direction.lower().strip()
+        self.r_bound = r_bound.strip()
+        self.l_bound = l_bound.strip()
+        self.arange = arange
+
+    def __repr__(self):
+        return f"VhdlParameterType('{self.name}','{self.arange}')"
+
 
 class VhdlParameter:
     """Parameter to subprograms, ports, and generics
 
     Args:
       name (str): Name of the object
-      mode (str): Direction mode for the parameter
-      data_type (str): Type name for the parameter
-      default_value (str): Default value of the parameter
-      desc (str): Description from object metacomments
-      param_desc (str): Description of the parameter
+      mode (optional str): Direction mode for the parameter
+      data_type (optional VhdlParameterType): Type name for the parameter
+      default_value (optional str): Default value of the parameter
+      desc (optional str): Description from object metacomments
+      param_desc (optional str): Description of the parameter
     """
 
-    def __init__(self, name, mode=None, data_type=None, default_value=None, desc=None, param_desc=None):
+    def __init__(self, name, mode: Optional[str] = None, data_type: Optional[VhdlParameterType] = None, default_value: Optional[str] = None, desc: Optional[str] = None, param_desc: Optional[str] = None):
         self.name = name
         self.mode = mode
         self.data_type = data_type
@@ -208,28 +237,6 @@ class VhdlParameter:
 
     def __repr__(self):
         return f"VhdlParameter('{self.name}', '{self.mode}', '{self.data_type.name + self.data_type.arange}')"
-
-
-class VhdlParameterType:
-    """Parameter type definition
-
-    Args:
-      name (str): Name of the type
-      direction(str): "to" or "downto"
-      r_bound (str): A simple expression based on digits or variable names
-      l_bound (str): A simple expression based on digits or variable names
-      arange (str): Original array range string
-    """
-
-    def __init__(self, name, direction="", r_bound="", l_bound="", arange=""):
-        self.name = name
-        self.direction = direction.strip()
-        self.r_bound = r_bound.strip()
-        self.l_bound = l_bound.strip()
-        self.arange = arange
-
-    def __repr__(self):
-        return f"VhdlParameterType('{self.name}','{self.arange}')"
 
 
 class VhdlPackage(VhdlObject):
@@ -357,7 +364,7 @@ class VhdlEntity(VhdlObject):
       desc (str, optional): Description from object metacomments
     """
 
-    def __init__(self, name, ports, generics=None, sections=None, desc=None):
+    def __init__(self, name: str, ports: List[VhdlParameter], generics: List[VhdlParameter] = [], sections: List[str] = [], desc: Optional[str] = None):
         VhdlObject.__init__(self, name, desc)
         self.kind = 'entity'
         self.generics = generics if generics is not None else []
@@ -602,7 +609,7 @@ def parse_vhdl(text):
             saved_type = groups[0]
 
         elif action in (
-        'array_type', 'file_type', 'access_type', 'record_type', 'range_type', 'enum_type', 'incomplete_type'):
+                'array_type', 'file_type', 'access_type', 'record_type', 'range_type', 'enum_type', 'incomplete_type'):
             vobj = VhdlType(saved_type, cur_package, action, metacomments)
             objects.append(vobj)
             kind = None
@@ -684,7 +691,7 @@ def is_vhdl(fname):
     Returns:
       True when file has a VHDL extension.
     """
-    return os.path.splitext(fname)[1].lower() in ('.vhdl', '.vhd')
+    return os.path.splitext(fname)[-1].lower() in ('.vhdl', '.vhd')
 
 
 class VhdlExtractor:
@@ -721,7 +728,11 @@ class VhdlExtractor:
                 self._register_array_types(objects)
 
         if type_filter:
-            objects = [o for o in objects if isinstance(o, type_filter)]
+            if not isinstance(type_filter, list):
+                type_filter = [type_filter]
+            objects = [
+                o for o in objects if any(map(lambda clz: isinstance(o, clz), type_filter))
+            ]
 
         return objects
 
@@ -750,11 +761,7 @@ class VhdlExtractor:
         Returns:
           True if ``data_type`` is a known array type.
         """
-
-        # Split off any brackets
-        data_type = data_type.split('[')[0].strip()
-
-        return data_type.lower() in self.array_types
+        return data_type.name.lower() in self.array_types
 
     def _add_array_types(self, type_defs):
         """Add array data types to internal registry

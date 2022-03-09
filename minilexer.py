@@ -6,12 +6,13 @@ import logging
 
 """Minimalistic lexer engine inspired by the PyPigments RegexLexer"""
 
-__version__ = '1.0.7'
 
 log = logging.getLogger(__name__)
-handler = logging.StreamHandler()
-handler.setFormatter(logging.Formatter('%(name)s - %(levelname)s - %(message)s'))
-log.addHandler(handler)
+
+if not log.handlers:  # only add the handler if no handlers are already registered
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter('%(name)s - %(levelname)s - %(message)s'))
+    log.addHandler(handler)
 
 
 class MiniLexer(object):

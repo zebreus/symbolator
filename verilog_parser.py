@@ -4,8 +4,7 @@
 import io
 import os
 from collections import OrderedDict
-
-from hdlparse.minilexer import MiniLexer
+from .minilexer import MiniLexer
 
 """Verilog documentation parser"""
 
@@ -25,7 +24,7 @@ verilog_tokens = {
             r'^[\(\s]*(input|inout|output)\s+(reg|supply0|supply1|tri|triand|trior|tri0|tri1|wire|wand|wor)?'
             r'\s*(signed)?\s*((\[[^]]+\])+)?',
             'module_port_start', 'module_port'),
-        (r'endmodule', 'end_module', '#pop'),
+        (r'\bendmodule\b', 'end_module', '#pop'),
         (r'/\*', 'block_comment', 'block_comment'),
         (r'//#\s*{{(.*)}}\n', 'section_meta'),
         (r'//.*\n', None),
@@ -226,7 +225,7 @@ def is_verilog(fname):
     Returns:
       True when file has a Verilog extension.
     """
-    return os.path.splitext(fname)[1].lower() in ('.vlog', '.v')
+    return os.path.splitext(fname)[1].lower() in ('.vlog', '.v', '.sv')
 
 
 class VerilogExtractor:
