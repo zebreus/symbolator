@@ -225,7 +225,7 @@ def is_verilog(fname):
     Returns:
       True when file has a Verilog extension.
     """
-    return os.path.splitext(fname)[1].lower() in ('.vlog', '.v', '.sv')
+    return os.path.splitext(fname)[-1].lower() in ('.vlog', '.v', '.sv')
 
 
 class VerilogExtractor:
