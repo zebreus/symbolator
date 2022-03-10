@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2017 Kevin Thibedeau
 # Distributed under the terms of the MIT license
-"""
-Verilog documentation parser
-"""
+"""Verilog documentation parser"""
 import io
 import os
 from collections import OrderedDict

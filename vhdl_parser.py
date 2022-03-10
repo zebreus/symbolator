@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2017 Kevin Thibedeau
 # Distributed under the terms of the MIT license
-"""
-VHDL documentation parser
-"""
+"""VHDL documentation parser"""
 import ast
 import io
 import os
@@ -848,10 +846,10 @@ package foo is
   component acomp is
     port (
       a,b,c : in std_ulogic;    -- no default value
-      f,g,h : inout bit := '1'; -- bit ports 
+      f,g,h : inout bit := '1'; -- bit ports
       v : in std_logic_vector(lBound -1 downto 0) -- array range
     ); -- port list comment
-    
+
   end component;
 
 end package;
@@ -864,11 +862,11 @@ end package;
         try:
             for p in o.parameters:
                 print(p)
-        except:
+        except AttributeError:
             pass
 
         try:
             for p in o.ports:
                 print(p)
-        except:
+        except AttributeError:
             pass

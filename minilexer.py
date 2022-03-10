@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2017 Kevin Thibedeau
 # Distributed under the terms of the MIT license
-"""
-Minimalistic lexer engine inspired by the PyPigments RegexLexer
-"""
+"""Minimalistic lexer engine inspired by the PyPigments RegexLexer"""
 import re
 import logging
-
 
 
 log = logging.getLogger(__name__)
