@@ -55,7 +55,7 @@ author = u'Kevin Thibedeau'
 #
 
 def get_package_version(verfile):
-  '''Scan the script for the version string'''
+  """Scan the script for the version string"""
   version = None
   with open(verfile) as fh:
       try:

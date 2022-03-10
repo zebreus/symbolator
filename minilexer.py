@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Copyright © 2017 Kevin Thibedeau
 # Distributed under the terms of the MIT license
+"""
+Minimalistic lexer engine inspired by the PyPigments RegexLexer
+"""
 import re
 import logging
 
-"""Minimalistic lexer engine inspired by the PyPigments RegexLexer"""
 
 
 log = logging.getLogger(__name__)
@@ -15,7 +17,7 @@ if not log.handlers:  # only add the handler if no handlers are already register
     log.addHandler(handler)
 
 
-class MiniLexer(object):
+class MiniLexer():
     """Simple lexer state machine with regex matching rules"""
 
     def __init__(self, tokens, flags=re.MULTILINE):
@@ -54,7 +56,7 @@ class MiniLexer(object):
           text (str): Text to apply lexer to
 
         Yields:
-          A sequence of lexer matches.
+          A sequence of lexer matches
         """
 
         stack = ['root']
@@ -67,7 +69,7 @@ class MiniLexer(object):
                 m = pat.match(text, pos)
                 if m:
                     if action:
-                        log.debug(f"Match: {m.group().strip()} -> {action}")
+                        log.debug("Match: %s -> %s", m.group().strip(), action)
 
                         yield (pos, m.end() - 1), action, m.groups()
 
