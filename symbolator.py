@@ -22,24 +22,33 @@ import hdlparse.verilog_parser as vlog
 
 from hdlparse.vhdl_parser import VhdlComponent, VhdlEntity, VhdlParameterType
 
-__version__ = '1.1.0'
+__version__ = "1.1.0"
 
 log = logging.getLogger(__name__)
 
 
 def xml_escape(txt):
-    '''Replace special characters for XML strings'''
-    txt = txt.replace('&', '&amp;')
-    txt = txt.replace('<', '&lt;')
-    txt = txt.replace('>', '&gt;')
-    txt = txt.replace('"', '&quot;')
+    """Replace special characters for XML strings"""
+    txt = txt.replace("&", "&amp;")
+    txt = txt.replace("<", "&lt;")
+    txt = txt.replace(">", "&gt;")
+    txt = txt.replace('"', "&quot;")
     return txt
 
 
 class Pin(object):
-    '''Symbol pin'''
+    """Symbol pin"""
 
-    def __init__(self, text, side='l', bubble=False, clocked=False, bus=False, bidir=False, data_type=None):
+    def __init__(
+        self,
+        text,
+        side="l",
+        bubble=False,
+        clocked=False,
+        bus=False,
+        bidir=False,
+        data_type=None,
+    ):
         self.text = text
         self.bubble = bubble
         self.side = side
@@ -54,28 +63,34 @@ class Pin(object):
 
     @property
     def styled_text(self):
-        return re.sub(r'(\[.*\])', r'<span foreground="#039BE5">\1</span>', xml_escape(self.text))
+        return re.sub(
+            r"(\[.*\])", r'<span foreground="#039BE5">\1</span>', xml_escape(self.text)
+        )
 
     @property
     def styled_type(self):
         if self.data_type:
-            return re.sub(r'(\[.*\])', r'<span foreground="#039BE5">\1</span>', xml_escape(self.data_type))
+            return re.sub(
+                r"(\[.*\])",
+                r'<span foreground="#039BE5">\1</span>',
+                xml_escape(self.data_type),
+            )
         else:
             return None
 
     def draw(self, x, y, c):
         g = c.create_group(x, y)
-        #r = self.bubble_rad
+        # r = self.bubble_rad
 
-        if self.side == 'l':
+        if self.side == "l":
             xs = -self.pin_length
-            #bx = -r
-            #xe = 2*bx if self.bubble else 0
+            # bx = -r
+            # xe = 2*bx if self.bubble else 0
             xe = 0
         else:
             xs = self.pin_length
-            #bx = r
-            #xe = 2*bx if self.bubble else 0
+            # bx = r
+            # xe = 2*bx if self.bubble else 0
             xe = 0
 
         # Whisker for pin
@@ -83,32 +98,42 @@ class Pin(object):
         ls = g.create_line(xs, 0, xe, 0, weight=pin_weight)
 
         if self.bidir:
-            ls.options['marker_start'] = 'arrow_back'
-            ls.options['marker_end'] = 'arrow_fwd'
-            ls.options['marker_adjust'] = 0.8
+            ls.options["marker_start"] = "arrow_back"
+            ls.options["marker_end"] = "arrow_fwd"
+            ls.options["marker_adjust"] = 0.8
 
         if self.bubble:
-            #g.create_oval(bx-r,-r, bx+r, r, fill=(255,255,255))
-            ls.options['marker_end'] = 'bubble'
-            ls.options['marker_adjust'] = 1.0
+            # g.create_oval(bx-r,-r, bx+r, r, fill=(255,255,255))
+            ls.options["marker_end"] = "bubble"
+            ls.options["marker_adjust"] = 1.0
 
         if self.clocked:  # Draw triangle for clock
-            ls.options['marker_end'] = 'clock'
-            #ls.options['marker_adjust'] = 1.0
+            ls.options["marker_end"] = "clock"
+            # ls.options['marker_adjust'] = 1.0
 
-        if self.side == 'l':
-            g.create_text(self.padding, 0, anchor='w', text=self.styled_text)
+        if self.side == "l":
+            g.create_text(self.padding, 0, anchor="w", text=self.styled_text)
 
             if self.data_type:
-                g.create_text(xs - self.padding, 0, anchor='e',
-                              text=self.styled_type, text_color=(150, 150, 150))
+                g.create_text(
+                    xs - self.padding,
+                    0,
+                    anchor="e",
+                    text=self.styled_type,
+                    text_color=(150, 150, 150),
+                )
 
         else:  # Right side pin
-            g.create_text(-self.padding, 0, anchor='e', text=self.styled_text)
+            g.create_text(-self.padding, 0, anchor="e", text=self.styled_text)
 
             if self.data_type:
-                g.create_text(xs + self.padding, 0, anchor='w',
-                              text=self.styled_type, text_color=(150, 150, 150))
+                g.create_text(
+                    xs + self.padding,
+                    0,
+                    anchor="w",
+                    text=self.styled_type,
+                    text_color=(150, 150, 150),
+                )
 
         return g
 
@@ -118,10 +143,17 @@ class Pin(object):
         return self.padding + w
 
 
-class PinSection(object):
-    '''Symbol section'''
+class PinSection:
+    """Symbol section"""
 
-    def __init__(self, name, fill=None, line_color=(0, 0, 0), title_font=('Verdana', 9, 'bold')):
+    def __init__(
+        self,
+        name,
+        fill=None,
+        line_color=(0, 0, 0),
+        title_font=("Verdana", 9, "bold"),
+        class_colors={},
+    ):
         self.fill = fill
         self.line_color = line_color
         self.title_font = title_font
@@ -132,34 +164,47 @@ class PinSection(object):
         self.name = name
         self.sect_class = None
 
+        if class_colors is None:
+            class_colors = {
+                "clocks": sinebow.lighten(sinebow.sinebow(0), 0.75),  # Red
+                "data": sinebow.lighten(sinebow.sinebow(0.35), 0.75),  # Green
+                "control": sinebow.lighten(sinebow.sinebow(0.15), 0.75),  # Yellow
+                "power": sinebow.lighten(sinebow.sinebow(0.07), 0.75),  # Orange
+            }
+
         if name is not None:
-            m = re.match(r'^(\S+)\s*\|(.*)$', name)
+            m = re.match(r"^([^\|]+)\s*(\|(\w*))?$", name)
             if m:
-                self.name = m.group(2).strip()
-                self.sect_class = m.group(1).strip().lower()
-                if len(self.name) == 0:
-                    self.name = None
+                self.name = m.group(3)
+                if self.name is not None:
+                    self.name = self.name.strip()
+                    if len(self.name) == 0:
+                        self.name = None
+                self.sect_class = m.group(1).strip().lower() if m.group(1) else None
 
-        class_colors = {
-            'clocks': sinebow.lighten(sinebow.sinebow(0), 0.75),     # Red
-            'data': sinebow.lighten(sinebow.sinebow(0.35), 0.75),    # Green
-            'control': sinebow.lighten(sinebow.sinebow(0.15), 0.75), # Yellow
-            'power': sinebow.lighten(sinebow.sinebow(0.07), 0.75)    # Orange
-        }
-
-        if self.sect_class in class_colors:
-            self.fill = class_colors[self.sect_class]
+        # if self.sect_class in class_colors:
+        #     self.fill = class_colors[self.sect_class]
+        if self.sect_class:
+            m = re.match(
+                r"#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$",
+                self.sect_class,
+                re.IGNORECASE,
+            )
+            if m:
+                self.fill = [int(m.group(i), 16) for i in range(1, 4)]
+            elif self.sect_class in class_colors:
+                self.fill = class_colors[self.sect_class]
 
     def add_pin(self, p):
         self.pins.append(p)
 
     @property
     def left_pins(self):
-        return [p for p in self.pins if p.side == 'l']
+        return [p for p in self.pins if p.side == "l"]
 
     @property
     def right_pins(self):
-        return [p for p in self.pins if p.side == 'r']
+        return [p for p in self.pins if p.side == "r"]
 
     @property
     def rows(self):
@@ -202,8 +247,9 @@ class PinSection(object):
 
         top = -dy / 2 - self.padding
         bot = toff - dy / 2 + self.rows * dy + self.padding
-        g.create_rectangle(0, top, width, bot, fill=self.fill,
-                           line_color=self.line_color)
+        g.create_rectangle(
+            0, top, width, bot, fill=self.fill, line_color=self.line_color
+        )
 
         if self.show_name and self.name:
             g.create_text(width / 2.0, 0, text=self.name, font=self.title_font)
@@ -224,7 +270,7 @@ class PinSection(object):
 
 
 class Symbol(object):
-    '''Symbol composed of sections'''
+    """Symbol composed of sections"""
 
     def __init__(self, sections=None, line_color=(0, 0, 0)):
         if sections is not None:
@@ -251,7 +297,7 @@ class Symbol(object):
             bb = sg.bbox
             yoff += bb[3] - bb[1]
             sect_boxes.append(sb)
-            #section.draw(50, 100 + h, sym_width, nc)
+            # section.draw(50, 100 + h, sym_width, nc)
 
         # Find outline of all sections
         hw = self.line_weight / 2.0 - 0.5
@@ -262,15 +308,24 @@ class Symbol(object):
         y1 = max(sect_boxes[3]) - hw
 
         # Add symbol outline
-        c.create_rectangle(x0, y0, x1, y1, weight=self.line_weight, line_color=self.line_color)
+        c.create_rectangle(
+            x0, y0, x1, y1, weight=self.line_weight, line_color=self.line_color
+        )
 
         return (x0, y0, x1, y1)
 
 
 class HdlSymbol(object):
-    '''Top level symbol object'''
+    """Top level symbol object"""
 
-    def __init__(self, component=None, libname=None, symbols=None, symbol_spacing=10, width_steps=20):
+    def __init__(
+        self,
+        component=None,
+        libname=None,
+        symbols=None,
+        symbol_spacing=10,
+        width_steps=20,
+    ):
         self.symbols = symbols if symbols is not None else []
         self.symbol_spacing = symbol_spacing
         self.width_steps = width_steps
@@ -282,7 +337,9 @@ class HdlSymbol(object):
 
     def draw(self, x, y, c):
         style = c.surf.def_styles
-        sym_width = max(s.min_width(c, style.font) for sym in self.symbols for s in sym.sections)
+        sym_width = max(
+            s.min_width(c, style.font) for sym in self.symbols for s in sym.sections
+        )
 
         sym_width = (sym_width // self.width_steps + 1) * self.width_steps
 
@@ -291,21 +348,36 @@ class HdlSymbol(object):
             bb = s.draw(x, y + yoff, c, sym_width)
             if i == 0 and self.libname:
                 # Add libname
-                c.create_text((bb[0] + bb[2]) / 2.0, bb[1] - self.symbol_spacing, anchor='cs',
-                              text=self.libname, font=('Helvetica', 12, 'bold'))
+                c.create_text(
+                    (bb[0] + bb[2]) / 2.0,
+                    bb[1] - self.symbol_spacing,
+                    anchor="cs",
+                    text=self.libname,
+                    font=("Helvetica", 12, "bold"),
+                )
             elif i == 0 and self.component:
                 # Add component name
-                c.create_text((bb[0] + bb[2]) / 2.0, bb[1] - self.symbol_spacing, anchor='cs',
-                              text=self.component, font=('Helvetica', 12, 'bold'))
+                c.create_text(
+                    (bb[0] + bb[2]) / 2.0,
+                    bb[1] - self.symbol_spacing,
+                    anchor="cs",
+                    text=self.component,
+                    font=("Helvetica", 12, "bold"),
+                )
 
             yoff += bb[3] - bb[1] + self.symbol_spacing
         if self.libname:
-            c.create_text((bb[0] + bb[2]) / 2.0, bb[3] + 2 * self.symbol_spacing, anchor='cs',
-                          text=self.component, font=('Helvetica', 12, 'bold'))
+            c.create_text(
+                (bb[0] + bb[2]) / 2.0,
+                bb[3] + 2 * self.symbol_spacing,
+                anchor="cs",
+                text=self.component,
+                font=("Helvetica", 12, "bold"),
+            )
 
 
 def make_section(sname, sect_pins, fill, extractor, no_type=False):
-    '''Create a section from a pin list'''
+    """Create a section from a pin list"""
     sect = PinSection(sname, fill=fill)
 
     for p in sect_pins:
@@ -314,49 +386,46 @@ def make_section(sname, sect_pins, fill, extractor, no_type=False):
         bus = extractor.is_array(p.data_type)
 
         # Convert Verilog modes
-        if pdir == 'input':
-            pdir = 'in'
-        elif pdir == 'output':
-            pdir = 'out'
+        if pdir == "input":
+            pdir = "in"
+        elif pdir == "output":
+            pdir = "out"
 
         # Determine which side the pin is on
-        if pdir in ('out', 'inout'):
-            side = 'r'
+        if pdir in ("out", "inout"):
+            side = "r"
         else:
-            side = 'l'
-            assert pdir in ('in')
+            side = "l"
+            assert pdir in ("in")
 
         data_type = None
         if not no_type:
             if isinstance(p.data_type, VhdlParameterType):
                 data_type = p.data_type.name
                 if bus:
-                    sep = ':' if p.data_type.direction == 'downto' else '\u2799'
-                    data_type = f"{data_type}[{p.data_type.l_bound}{sep}{p.data_type.r_bound}]"
+                    sep = ":" if p.data_type.direction == "downto" else "\u2799"
+                    data_type = (
+                        f"{data_type}[{p.data_type.l_bound}{sep}{p.data_type.r_bound}]"
+                    )
             else:
                 data_type = str(p.data_type)
 
-        pin = Pin(
-            pname,
-            side=side,
-            data_type=data_type,
-            bidir=pdir == 'inout'
-        )
+        pin = Pin(pname, side=side, data_type=data_type, bidir=pdir == "inout")
 
         # Check for pin name patterns
         pin_patterns = {
-            'clock': re.compile(r'(^cl(oc)?k)|(cl(oc)?k$)', re.IGNORECASE),
-            'bubble': re.compile(r'_[nb]$', re.IGNORECASE),
-            'bus': re.compile(r'(\[.*\]$)', re.IGNORECASE)
+            "clock": re.compile(r"(^cl(oc)?k)|(cl(oc)?k$)", re.IGNORECASE),
+            "bubble": re.compile(r"_[nb]$", re.IGNORECASE),
+            "bus": re.compile(r"(\[.*\]$)", re.IGNORECASE),
         }
 
-        if pdir == 'in' and pin_patterns['clock'].search(pname):
+        if pdir == "in" and pin_patterns["clock"].search(pname):
             pin.clocked = True
 
-        if pin_patterns['bubble'].search(pname):
+        if pin_patterns["bubble"].search(pname):
             pin.bubble = True
 
-        if bus or pin_patterns['bus'].search(pname):
+        if bus or pin_patterns["bus"].search(pname):
             pin.bus = True
 
         sect.add_pin(pin)
@@ -365,13 +434,12 @@ def make_section(sname, sect_pins, fill, extractor, no_type=False):
 
 
 def make_symbol(comp, extractor, title=False, libname=None, no_type=False):
-    '''Create a symbol from a parsed component/module'''
+    """Create a symbol from a parsed component/module"""
     vsym = HdlSymbol(comp.name if title else None, libname)
     color_seq = sinebow.distinct_color_sequence(0.6)
 
     if len(comp.generics) > 0:  # 'generic' in entity_data:
-        s = make_section(None, comp.generics,
-                         (200, 200, 200), extractor, no_type)
+        s = make_section(None, comp.generics, (200, 200, 200), extractor, no_type)
         s.line_color = (100, 100, 100)
         gsym = Symbol([s], line_color=(100, 100, 100))
         vsym.add_symbol(gsym)
@@ -394,7 +462,13 @@ def make_symbol(comp, extractor, title=False, libname=None, no_type=False):
             sections.append((sect_name, cur_sect))
 
         for sdata in sections:
-            s = make_section(sdata[0], sdata[1], sinebow.lighten(next(color_seq), 0.75), extractor, no_type)
+            s = make_section(
+                sdata[0],
+                sdata[1],
+                sinebow.lighten(next(color_seq), 0.75),
+                extractor,
+                no_type,
+            )
             psym.add_section(s)
 
         vsym.add_symbol(psym)
@@ -403,32 +477,96 @@ def make_symbol(comp, extractor, title=False, libname=None, no_type=False):
 
 
 def parse_args():
-    '''Parse command line arguments'''
-    parser = argparse.ArgumentParser(description='HDL symbol generator')
-    parser.add_argument('-i', '--input', dest='input', action='store', help='HDL source ("-" for STDIN)')
-    parser.add_argument('-o', '--output', dest='output', action='store', help='Output file')
-    parser.add_argument('--output-as-filename', dest='output_as_filename', action='store_true',
-                        help='The --output flag will be used directly as output filename')
-    parser.add_argument('-f', '--format', dest='format',
-                        action='store', default='svg', help='Output format')
-    parser.add_argument('-L', '--library', dest='lib_dirs', action='append',
-                        default=['.'], help='Library path')
-    parser.add_argument('-s', '--save-lib', dest='save_lib',
-                        action='store_true', default=False, help='Save type def cache file')
-    parser.add_argument('-t', '--transparent', dest='transparent', action='store_true',
-                        default=False, help='Transparent background')
-    parser.add_argument('--scale', dest='scale',
-                        action='store', default=1.0, type=float, help='Scale image')
-    parser.add_argument('--title', dest='title', action='store_true',
-                        default=False, help='Add component name above symbol')
-    parser.add_argument('--no-type', dest='no_type', action='store_true', default=False,
-                        help='Omit pin type information')
-    parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {__version__}',
-                        help='Print symbolator version and exit')
-    parser.add_argument('--libname', dest='libname', action='store', default='',
-                        help='Add libname above cellname, and move component name to bottom. Works only with --title')
-    parser.add_argument('--debug', action="store_const", dest="loglevel", const=logging.DEBUG, default=logging.INFO,
-                        help="Print debug messages.")
+    """Parse command line arguments"""
+    parser = argparse.ArgumentParser(description="HDL symbol generator")
+    parser.add_argument(
+        "-i", "--input", dest="input", action="store", help='HDL source ("-" for STDIN)'
+    )
+    parser.add_argument(
+        "-o", "--output", dest="output", action="store", help="Output file"
+    )
+    parser.add_argument(
+        "--output-as-filename",
+        dest="output_as_filename",
+        action="store_true",
+        help="The --output flag will be used directly as output filename",
+    )
+    parser.add_argument(
+        "-f",
+        "--format",
+        dest="format",
+        action="store",
+        default="svg",
+        help="Output format",
+    )
+    parser.add_argument(
+        "-L",
+        "--library",
+        dest="lib_dirs",
+        action="append",
+        default=["."],
+        help="Library path",
+    )
+    parser.add_argument(
+        "-s",
+        "--save-lib",
+        dest="save_lib",
+        action="store_true",
+        default=False,
+        help="Save type def cache file",
+    )
+    parser.add_argument(
+        "-t",
+        "--transparent",
+        dest="transparent",
+        action="store_true",
+        default=False,
+        help="Transparent background",
+    )
+    parser.add_argument(
+        "--scale",
+        dest="scale",
+        action="store",
+        default=1.0,
+        type=float,
+        help="Scale image",
+    )
+    parser.add_argument(
+        "--title",
+        dest="title",
+        action="store_true",
+        default=False,
+        help="Add component name above symbol",
+    )
+    parser.add_argument(
+        "--no-type",
+        dest="no_type",
+        action="store_true",
+        default=False,
+        help="Omit pin type information",
+    )
+    parser.add_argument(
+        "-v",
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
+        help="Print symbolator version and exit",
+    )
+    parser.add_argument(
+        "--libname",
+        dest="libname",
+        action="store",
+        default="",
+        help="Add libname above cellname, and move component name to bottom. Works only with --title",
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_const",
+        dest="loglevel",
+        const=logging.DEBUG,
+        default=logging.INFO,
+        help="Print debug messages.",
+    )
 
     args, unparsed = parser.parse_known_args()
     logging.basicConfig(level=args.loglevel)
@@ -437,14 +575,16 @@ def parse_args():
     if args.input is None and len(unparsed) > 0:
         args.input = unparsed[0]
 
-    if args.format.lower() in ('png', 'svg', 'pdf', 'ps', 'eps'):
+    if args.format.lower() in ("png", "svg", "pdf", "ps", "eps"):
         args.format = args.format.lower()
 
-    if args.input == '-' and args.output is None:  # Reading from stdin: must have full output file name
-        log.critical('Error: Output file is required when reading from stdin')
+    if (
+        args.input == "-" and args.output is None
+    ):  # Reading from stdin: must have full output file name
+        log.critical("Error: Output file is required when reading from stdin")
         sys.exit(1)
 
-    if args.libname != '' and not args.title:
+    if args.libname != "" and not args.title:
         log.critical("Error: '--title' is required when using libname")
         sys.exit(1)
 
@@ -454,8 +594,8 @@ def parse_args():
     return args
 
 
-def file_search(base_dir, extensions=('.vhdl', '.vhd')):
-    '''Recursively search for files with matching extensions'''
+def file_search(base_dir, extensions=(".vhdl", ".vhd")):
+    """Recursively search for files with matching extensions"""
     extensions = set(extensions)
     hdl_files = []
     for root, dirs, files in os.walk(base_dir):
@@ -465,12 +605,14 @@ def file_search(base_dir, extensions=('.vhdl', '.vhd')):
 
     return hdl_files
 
+
 def filter_types(objects: Iterator[Any], types: List[Type]):
     """keep only objects which are instances of _any_ of the types in 'types'"""
     return filter(lambda o: any(map(lambda clz: isinstance(o, clz), types)), objects)
 
+
 def main():
-    '''Run symbolator'''
+    """Run symbolator"""
     args = parse_args()
 
     style = DrawStyle()
@@ -487,9 +629,9 @@ def main():
         # Find all library files
         flist = []
         for lib in args.lib_dirs:
-            log.info(f'Scanning library: {lib}')
+            log.info(f"Scanning library: {lib}")
             # Get VHDL and Verilog files
-            flist.extend(file_search(lib, extensions=('.vhdl', '.vhd', '.vlog', '.v')))
+            flist.extend(file_search(lib, extensions=(".vhdl", ".vhd", ".vlog", ".v")))
         if args.input and os.path.isfile(args.input):
             flist.append(args.input)
 
@@ -510,34 +652,31 @@ def main():
 
     vhdl_types = [VhdlComponent, VhdlEntity]
 
-    if args.input == '-':  # Read from stdin
-        code = ''.join(list(sys.stdin))
+    if args.input == "-":  # Read from stdin
+        code = "".join(list(sys.stdin))
         vlog_objs = vlog_ex.extract_objects_from_source(code)
 
         all_components = {
-            '<stdin>':
-                (vlog_ex, vlog_objs) if vlog_objs else
-                (vhdl_ex, filter_types(vhdl_ex.extract_objects_from_source(code), vhdl_types))
+            "<stdin>": (vlog_ex, vlog_objs)
+            if vlog_objs
+            else (
+                vhdl_ex,
+                filter_types(vhdl_ex.extract_objects_from_source(code), vhdl_types),
+            )
         }
     else:
         if os.path.isfile(args.input):
             flist = [args.input]
         elif os.path.isdir(args.input):
-            flist = file_search(
-                args.input,
-                extensions=('.vhdl', '.vhd', '.vlog', '.v')
-            )
+            flist = file_search(args.input, extensions=(".vhdl", ".vhd", ".vlog", ".v"))
         else:
-            log.critical('Error: Invalid input source')
+            log.critical("Error: Invalid input source")
             sys.exit(1)
 
         all_components = dict()
         for f in flist:
             if vhdl.is_vhdl(f):
-                all_components[f] = (
-                    vhdl_ex,
-                    vhdl_filter(vhdl_ex.extract_objects(f))
-                )
+                all_components[f] = (vhdl_ex, vhdl_filter(vhdl_ex.extract_objects(f)))
             else:
                 all_components[f] = (vlog_ex, vlog_ex.extract_objects(f))
 
@@ -549,38 +688,57 @@ def main():
     nc = NuCanvas(None)
 
     # Set markers for all shapes
-    nc.add_marker('arrow_fwd',
-                  PathShape(((0, -4), (2, -1, 2, 1, 0, 4), (8, 0),
-                            'z'), fill=(0, 0, 0), weight=0),
-                  (3.2, 0), 'auto', None)
+    nc.add_marker(
+        "arrow_fwd",
+        PathShape(
+            ((0, -4), (2, -1, 2, 1, 0, 4), (8, 0), "z"), fill=(0, 0, 0), weight=0
+        ),
+        (3.2, 0),
+        "auto",
+        None,
+    )
 
-    nc.add_marker('arrow_back',
-                  PathShape(((0, -4), (-2, -1, -2, 1, 0, 4),
-                            (-8, 0), 'z'), fill=(0, 0, 0), weight=0),
-                  (-3.2, 0), 'auto', None)
+    nc.add_marker(
+        "arrow_back",
+        PathShape(
+            ((0, -4), (-2, -1, -2, 1, 0, 4), (-8, 0), "z"), fill=(0, 0, 0), weight=0
+        ),
+        (-3.2, 0),
+        "auto",
+        None,
+    )
 
-    nc.add_marker('bubble',
-                  OvalShape(-3, -3, 3, 3, fill=(255, 255, 255), weight=1),
-                  (0, 0), 'auto', None)
+    nc.add_marker(
+        "bubble",
+        OvalShape(-3, -3, 3, 3, fill=(255, 255, 255), weight=1),
+        (0, 0),
+        "auto",
+        None,
+    )
 
-    nc.add_marker('clock',
-                  PathShape(((0, -7), (0, 7), (7, 0), 'z'),
-                            fill=(255, 255, 255), weight=1),
-                  (0, 0), 'auto', None)
+    nc.add_marker(
+        "clock",
+        PathShape(((0, -7), (0, 7), (7, 0), "z"), fill=(255, 255, 255), weight=1),
+        (0, 0),
+        "auto",
+        None,
+    )
 
     # Render every component from every file into an image
     for source, (extractor, components) in all_components.items():
         for comp in components:
             log.debug(f"source: {source} component: {comp}")
-            comp.name = comp.name.strip('_')
-            if source == '<stdin>' or args.output_as_filename:
+            comp.name = comp.name.strip("_")
+            if source == "<stdin>" or args.output_as_filename:
                 fname = args.output
             else:
                 fname = f'{args.libname + "__" if args.libname else ""}{comp.name}.{args.format}'
                 if args.output:
                     fname = os.path.join(args.output, fname)
-            log.info('Creating symbol for {} "{}"\n\t-> {}'.format(source, comp.name, fname))
-            if args.format == 'svg':
+            log.info(
+                'Creating symbol for {} "{}"\n\t-> {}'.format(source, comp.name, fname)
+            )
+            if args.format == "svg":
                 surf = SvgSurface(fname, style, padding=5, scale=args.scale)
             else:
                 surf = CairoSurface(fname, style, padding=5, scale=args.scale)
@@ -594,7 +752,7 @@ def main():
             nc.render(args.transparent)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 
 
@@ -626,6 +784,7 @@ def test_is_verilog():
         vlog_objs = vlog_ex.extract_objects_from_source(code)
         print(vlog_objs)
         return len(vlog_objs) > 0
+
     for code in positive:
         code = textwrap.dedent(code)
         assert is_verilog_code(code)
