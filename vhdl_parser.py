@@ -195,8 +195,8 @@ class VhdlParameterType:
     def __init__(self, name, direction="", r_bound="", l_bound="", arange=""):
         self.name = name
         self.direction = direction.lower().strip()
-        self.r_bound = r_bound.strip()
-        self.l_bound = l_bound.strip()
+        self.r_bound = r_bound
+        self.l_bound = l_bound
         self.arange = arange
 
     def __repr__(self):
@@ -578,9 +578,32 @@ def parse_vhdl(text):
 
         elif action == 'array_range_val':
             l_bound, direction, r_bound = groups
+            if direction:
+                direction = direction.strip()
+            if l_bound:
+                try:
+                    l_bound = l_bound.replace("/", "//")
+                    l_bound = eval(l_bound)
+                except Exception:
+                    pass
+            if r_bound:
+                try:
+                    r_bound = r_bound.replace("/", "//")
+                    r_bound = eval(r_bound)
+                except Exception:
+                    pass
 
         elif action == 'array_range_end':
-            arange = text[array_range_start_pos:pos[0] + 1]
+            if l_bound and r_bound and direction:
+                arange = " ".join([l_bound, direction, r_bound])
+                print("arange -> ", arange)
+            else:
+                arange = text[array_range_start_pos:pos[0] + 1]
+            # arange = arange.strip().lstrip("(")
+            # match = re.match("\s*\(?\s*(.*)\s+(downto|to)\s+(.*)\s*\)\s*", arange, re.IGNORECASE)
+            # if match:
+            #     print("------", match.groups())
+            #     arange = " ".join(match.groups())
 
             last_items = []
             for i in param_items:
@@ -730,6 +753,8 @@ class VhdlExtractor:
                 objects = parse_vhdl(text)
                 self.object_cache[fname] = objects
                 self._register_array_types(objects)
+
+        print("objects=", objects)
 
         if type_filter:
             if not isinstance(type_filter, list):
