@@ -1,18 +1,18 @@
 { pkgs ? import <nixpkgs> { } }:
 let
-  hdlparse = pkgs.python2Packages.buildPythonPackage rec {
+  hdlparse = pkgs.python3Packages.buildPythonPackage rec {
     pname = "hdlparse";
     version = "1.0.4";
     src = pkgs.fetchFromGitHub {
-      owner = "kevinpt";
-      repo = "hdlparse";
-      rev = "be7cdab08a8c18815cc4504003ce9ca7fff41022";
-      sha256 = "sha256-KJXl9lQY6xYJkaS41F8V1jGz5jhu0oPhb/lQVj/gj18="; # TODO
+      owner = "hdl";
+      repo = "pyHDLParser";
+      rev = "e1153ace8ca1e25f9fb53350c41058ef8eb8dacf";
+      sha256 = "sha256-XpOcQ801blKfQYLgZ4vDusZ8OkND0KmKxYUWzWKl/MM="; # TODO
     };
   };
 in
 with pkgs;
-python2Packages.buildPythonPackage rec {
+python3Packages.buildPythonPackage rec {
   name = "symbolator";
   version = "1.0.2";
   src = ./.;
@@ -21,9 +21,12 @@ python2Packages.buildPythonPackage rec {
   propagatedBuildInputs = [
     pango
     hdlparse
-    python2Packages.pygobject3
-    python2Packages.pycairo
-    python2Packages.setuptools
+    python3Packages.pygobject3
+    python3Packages.pycairo
+    python3Packages.setuptools
+    python3Packages.six
+    python3Packages.docutils
+    python3Packages.sphinx
   ];
 
   meta = with lib; {
@@ -31,7 +34,7 @@ python2Packages.buildPythonPackage rec {
     longDescription = ''
       Symbolator is a component diagramming tool for VHDL and Verilog. It will parse HDL source files, extract components or modules and render them as an image.
     '';
-    homepage = "http://kevinpt.github.io/symbolator";
+    homepage = "https://hdl.github.io/symbolator/";
     license = licenses.mit;
     platforms = lib.platforms.linux;
     mainProgram = "symbolator";
