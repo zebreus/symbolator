@@ -12,14 +12,16 @@ let
   };
 in
 with pkgs;
-python3Packages.buildPythonPackage rec {
-  name = "symbolator";
+python3Packages.buildPythonApplication rec {
+  pname = "symbolator";
   version = "1.0.2";
   src = ./.;
   nativeBuildInputs = [ wrapGAppsHook gobject-introspection ];
 
   propagatedBuildInputs = [
     pango
+    fontconfig
+    gobject-introspection
     hdlparse
     python3Packages.pygobject3
     python3Packages.pycairo
