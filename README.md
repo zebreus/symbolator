@@ -1,6 +1,6 @@
 ![Symbolator logo](https://zebreus.github.io/symbolator/_static/symbolator_icon.png)
 
-= Symbolator
+# Symbolator
 
 Symbolator is a component diagramming tool for VHDL and Verilog. It will parse HDL source files, extract components or modules and render them as an image.
 
@@ -43,7 +43,7 @@ Produces the following:
 
 Symbolator can render to PNG bitmap images or SVG, PDF, PS, and EPS vector images. SVG is the default.
 
-== Requirements
+## Requirements
 
 Symbolator requires Python 3.x, Pycairo, and Pango.
 
@@ -55,15 +55,15 @@ If you are running linux you can use the nix package manager to build and run sy
 nix run github:Zebreus/symbolator
 ```
 
-== Licensing
+## Licensing
 
 Symbolator is licensed for free commercial and non-commercial use under the terms of the MIT license. The Symbolator Sphinx extension is derived from the Graphviz extension and is BSD licensed.
 
-== Download
+## Download
 
 You can access the Symbolator Git repository from [Github](https://github.com/zebreus/symbolator). You can install direct from PyPI with the "pip" command if you have it available.
 
-== Contributing
+## Contributing
 
 Thank you for considering contributing to this project!
 
@@ -76,6 +76,6 @@ To contribute, please follow these steps:
 
 I will review your pull request as soon as possible.
 
-== Documentation
+## Documentation
 
 The full documentation is available online at the [main Symbolator site](https://zebreus.github.io/symbolator/).
