@@ -4,6 +4,8 @@
 
 Symbolator is a component diagramming tool for VHDL and Verilog. It will parse HDL source files, extract components or modules and render them as an image.
 
+This is a fork of [kevinpt/symbolator](https://github.com/kevinpt/symbolator) which is sadly unmaintained.
+
 ```vhdl
 library ieee;
 use ieee.std_logic_1164.all;
@@ -60,6 +62,19 @@ Symbolator is licensed for free commercial and non-commercial use under the term
 == Download
 
 You can access the Symbolator Git repository from [Github](https://github.com/zebreus/symbolator). You can install direct from PyPI with the "pip" command if you have it available.
+
+== Contributing
+
+Thank you for considering contributing to this project!
+
+To contribute, please follow these steps:
+
+1. Fork the repository and create your branch from main.
+2. Make the necessary changes and additions.
+3. Ensure that you are happy with your changes.
+4. Submit a pull request, describing the changes you've made and providing any relevant information.
+
+I will review your pull request as soon as possible.
 
 == Documentation
 
