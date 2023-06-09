@@ -3,7 +3,7 @@ name = "symbolator"
 version = "1.1.1"
 authors = [{ name = "Kevin Thibedeau", email = "kevin.thibedeau@gmail.com" }]
 maintainers = [{ name = "Zebreus", email = "lennart@madmanfred.com" }]
-readme = "README.rst"
+readme = "README.md"
 dependencies =[ "sphinx>=4.3,<5"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
