@@ -66,7 +66,7 @@ def get_package_version(verfile):
   return version
 
 # The short X.Y version.
-version = get_package_version('../symbolator.py')
+version = get_package_version('../symbolator/__init__.py')
 # The full version, including alpha/beta/rc tags.
 release = version
 
