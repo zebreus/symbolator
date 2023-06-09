@@ -3,3 +3,4 @@ dist
 *.pyc
 doc/_build
 symbolator.egg-info
+_build

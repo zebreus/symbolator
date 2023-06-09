@@ -155,7 +155,7 @@ def render_symbol(self, code: str, options: Dict[str, Any], format: str, prefix:
     assert isinstance(code, str)
     code_bytes: bytes = code.encode('utf-8')
 
-    cmd_args = [symbolator_cmd]
+    cmd_args = symbolator_cmd.split()
     cmd_args.extend(self.builder.config.symbolator_cmd_args)
     cmd_args.extend(['-i', '-', '-f', format, '-o', outfn])
 

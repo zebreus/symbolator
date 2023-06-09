@@ -409,7 +409,7 @@ Images are named by default with a SHA1 hash of the code and settings used to ge
     :alt: Alt text
     :align: center
     :caption: Caption text
-    :symbolator_cmd: /usr/local/bin/symbolator
+    :symbolator_cmd: /usr/bin/env symbolator
     :name: vlog-example
 
     module vlog
@@ -423,7 +423,7 @@ Images are named by default with a SHA1 hash of the code and settings used to ge
   :alt: Alt text
   :align: center
   :caption: Caption text
-  :symbolator_cmd: /usr/local/bin/symbolator
+  :symbolator_cmd: /usr/bin/env symbolator
   :name: vlog-example
 
   module vlog
