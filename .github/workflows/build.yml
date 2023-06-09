@@ -21,11 +21,11 @@ jobs:
       - name: Bundle self extracting archive
         run: |
           nix bundle --sandbox --print-build-logs .
-          mv symbolator symbolator-arx || true
+          mv python*-symbolator symbolator-arx || true
       - name: Bundle AppImage
         run: |
           nix bundle --sandbox --print-build-logs --bundler github:ralismark/nix-appimage .
-          mv symbolator*AppImage symbolator.AppImage
+          mv python*symbolator*AppImage symbolator.AppImage
       - name: Verify AppImage
         run: |
           ./symbolator.AppImage --appimage-extract-and-run --version
