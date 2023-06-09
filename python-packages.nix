@@ -332,7 +332,10 @@ self: super: {
     doCheck = false;
     buildInputs = [];
     checkInputs = [];
-    nativeBuildInputs = [];
+    nativeBuildInputs = [
+      self."setuptools"
+      self."wheel"
+    ];
     propagatedBuildInputs = [
       self."sphinx"
     ];

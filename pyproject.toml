@@ -1,0 +1,44 @@
+[project]
+name = "symbolator"
+version = "1.1.1"
+authors = [{ name = "Kevin Thibedeau", email = "kevin.thibedeau@gmail.com" }]
+maintainers = [{ name = "Zebreus", email = "lennart@madmanfred.com" }]
+readme = "README.rst"
+dependencies =[ "sphinx>=4.3,<5"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Software Development :: Documentation",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License"
+]
+keywords = ["HDL", "symbol"]
+license = { file = "LICENSE" }
+description = "HDL symbol generator"
+requires-python = ">=3.3"
+
+[project.urls]
+Homepage = "https://zebreus.github.io/symbolator"
+source = "https://github.com/zebreus/symbolator"
+
+[project.scripts]
+symbolator = "symbolator.__main__:main"
+hdlparse = "hdlparse.__main__:main"
+
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[tool.setuptools]
+packages = [
+    "nucanvas",
+    "nucanvas.color",
+    "symbolator_sphinx",
+    "hdlparse",
+    "symbolator"
+]
+
