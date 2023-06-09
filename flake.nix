@@ -25,7 +25,6 @@
             propagatedBuildInputs = [
               pango
               fontconfig
-              gobject-introspection
               python3Packages.pygobject3
             ] ++ attrs.propagatedBuildInputs;
 
@@ -35,13 +34,14 @@
                 Symbolator is a component diagramming tool for VHDL and Verilog. It will parse HDL source files, extract components or modules and render them as an image.
               '';
               homepage = "https://hdl.github.io/symbolator/";
+              maintainer = "zebreus";
               license = licenses.mit;
               platforms = lib.platforms.linux;
               mainProgram = "symbolator";
             };
           });
         };
-        pythonPackages = pkgs.python3.override { packageOverrides = composeExtensions packageOverrides pythonPackagesLocalOverrides; }.pkgs;
+        pythonPackages = (pkgs.python3.override { packageOverrides = composeExtensions packageOverrides pythonPackagesLocalOverrides; }).pkgs;
       in
       rec
       {
