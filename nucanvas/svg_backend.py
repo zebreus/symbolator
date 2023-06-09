@@ -58,7 +58,7 @@ class SvgSurface(BaseSurface):
         self.fh = None
 
     svg_header = '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created by Symbolator http://kevinpt.github.io/symbolator -->
+<!-- Created by Symbolator https://zebreus.github.io/symbolator -->
 <svg xmlns="http://www.w3.org/2000/svg"
 xmlns:xlink="http://www.w3.org/1999/xlink"
 xml:space="preserve"

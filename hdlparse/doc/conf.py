@@ -107,7 +107,7 @@ html_theme_options = {
     'show_powered_by': False,
     'logo_text_align': 'center',
     'font_family': 'Verdana, Geneva, sans-serif',
-    'github_user': 'kevinpt',
+    'github_user': 'zebreus',
     'github_repo': 'hdlparse',
     'github_button': True
 }
@@ -121,7 +121,7 @@ html_static_path = ['_static']
 # to template names.
 #
 # This is required for the alabaster theme
-# refs: http://alabaster.readthedocs.io/en/latest/installation.html#sidebars
+# refs: https://alabaster.readthedocs.io/en/latest/installation.html#sidebars
 html_sidebars = {
     '**': [
         'about.html',

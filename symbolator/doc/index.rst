@@ -51,7 +51,7 @@ Requirements
 
 Symbolator requires Python 3.x, Pycairo, and Pango. Symbolator no longer supports Python 2.x.
 
-The Pango library is used compute the dimensions of a text layout. There is no standard package to get the Pango Python bindings installed. It is a part of the Gtk+ library which is accessed either through the PyGtk or PyGObject APIs, both of which are supported by Symbolator. You should make sure that one of these libraries is available before installing Symbolator. A `Windows installer <http://www.pygtk.org/downloads.html>`_ is available. For Linux distributions you should install the relevant libraries with your package manager.
+The Pango library is used compute the dimensions of a text layout. There is no standard package to get the Pango Python bindings installed. It is a part of the Gtk+ library which is accessed either through the PyGtk or PyGObject APIs, both of which are supported by Symbolator. You should make sure that one of these libraries is available before installing Symbolator. A `Windows installer <https://www.pygtk.org/downloads.html>`_ is available. For Linux distributions you should install the relevant libraries with your package manager.
 
 Licensing
 ---------
@@ -63,14 +63,14 @@ Download
 --------
 
 You can access the Symbolator Git repository from `Github
-<https://github.com/kevinpt/symbolator>`_. You can install direct from PyPI with the "pip"
+<https://github.com/zebreus/symbolator>`_. You can install direct from PyPI with the "pip"
 command if you have it available.
 
 
 Installation
 ------------
 
-Symbolator is a Python application. You must have Python installed first to use it. Most modern Linux distributions and OS/X have it available by default. There are a number of options available for Windows. If you don't already have a favorite, I recommend getting one of the `"full-stack" Python distros <http://www.scipy.org/install.html>`_ that are geared toward scientific computing such as Anaconda or Python(x,y).
+Symbolator is a Python application. You must have Python installed first to use it. Most modern Linux distributions and OS/X have it available by default. There are a number of options available for Windows. If you don't already have a favorite, I recommend getting one of the `"full-stack" Python distros <https://www.scipy.org/install.html>`_ that are geared toward scientific computing such as Anaconda or Python(x,y).
 
 If your OS has a package manager, it may be preferable to install Python setuptools through that tool before attempting to install Symbolator. Otherwise, the installation script will install these packages directly without registering them with the OS package manager.
 
@@ -91,7 +91,7 @@ You can also use ``pip`` to get the latest development code from Github:
 
 .. code-block:: sh
 
-  > pip install --upgrade https://github.com/kevinpt/symbolator/tarball/master
+  > pip install --upgrade https://github.com/zebreus/symbolator/tarball/master
 
 If you manually downloaded a source package or created a clone with Git you can install Symbolator with the following command run from the base Symbolator directory:
 

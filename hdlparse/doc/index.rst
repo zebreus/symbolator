@@ -9,7 +9,7 @@ Hdlparse
 
 Hdlparse is a simple package implementing a rudimentary parser for VHDL and Verilog. It is not capable of fully parsing the entire language. Rather, it is meant to extract enough key information from a source file to create generated documentation.
 
-This library is used by the `Symbolator <https://github.com/kevinpt/symbolator>`_ diagram generator.
+This library is used by the `Symbolator <https://github.com/zebreus/symbolator>`_ diagram generator.
 
 For VHDL this library can extract component, subprogram, type, subtype, and constant declarations from a package. For Verilog it can extract module declarations (both 1995 and 2001 syntax).
 
@@ -34,13 +34,13 @@ Download
 --------
 
 You can access the Hdlparse Git repository from `Github
-<https://github.com/kevinpt/hdlparse>`_. You can install direct from PyPI with the ``pip``
+<https://github.com/zebreus/hdlparse>`_. You can install direct from PyPI with the ``pip``
 command if you have it available.
 
 Installation
 ------------
 
-Hdlparse is a Python library. You must have Python installed first to use it. Most modern Linux distributions and OS/X have it available by default. There are a number of options available for Windows. If you don't already have a favorite, I recommend getting one of the `"full-stack" Python distros <http://www.scipy.org/install.html>`_ that are geared toward scientific computing such as Anaconda or Python(x,y).
+Hdlparse is a Python library. You must have Python installed first to use it. Most modern Linux distributions and OS/X have it available by default. There are a number of options available for Windows. If you don't already have a favorite, I recommend getting one of the `"full-stack" Python distros <https://www.scipy.org/install.html>`_ that are geared toward scientific computing such as Anaconda or Python(x,y).
 
 You need to have the Python setuptools installed first. If your OS has a package manager, it may be preferable to install setuptools through that tool. Otherwise you can use Pip:
 
@@ -65,7 +65,7 @@ You can also use ``pip`` to get the latest development code from Github:
 
 .. code-block:: sh
 
-  > pip install --upgrade https://github.com/kevinpt/hdlparse/tarball/master
+  > pip install --upgrade https://github.com/zebreus/hdlparse/tarball/master
 
 If you manually downloaded a source package or created a clone with Git you can install with the following command run from the base Hdlparse directory:
 

@@ -6,7 +6,7 @@ from math import sin, pi
 import colorsys
 
 def sinebow(hue):
-  '''Adapted from http://basecase.org/env/on-rainbows'''
+  '''Adapted from https://basecase.org/env/on-rainbows'''
   hue = -(hue + 0.5) # Start at red rotating clockwise
   rgb = sin(pi * hue), sin(pi * (hue + 1.0/3.0)), sin(pi * (hue + 2.0/3.0))
   return tuple(int(255  * c**2) for c in rgb)

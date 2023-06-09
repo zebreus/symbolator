@@ -1,4 +1,4 @@
-![Symbolator logo](https://kevinpt.github.io/symbolator/_static/symbolator_icon.png)
+![Symbolator logo](https://zebreus.github.io/symbolator/_static/symbolator_icon.png)
 
 = Symbolator
 
@@ -59,7 +59,7 @@ Symbolator is licensed for free commercial and non-commercial use under the term
 
 == Download
 
-You can access the Symbolator Git repository from [Github](https://github.com/kevinpt/symbolator). You can install direct from PyPI with the "pip" command if you have it available.
+You can access the Symbolator Git repository from [Github](https://github.com/zebreus/symbolator). You can install direct from PyPI with the "pip" command if you have it available.
 
 == Documentation
 
