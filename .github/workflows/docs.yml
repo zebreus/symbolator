@@ -14,5 +14,10 @@ jobs:
       pages: write
       id-token: write
     steps:
-    - id: deployment
-      uses: sphinx-notes/pages@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: List directory
+        run: |
+          ls -ad $(pwd)/*
+      - id: deployment
+        uses: sphinx-notes/pages@v3
