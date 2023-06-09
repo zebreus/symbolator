@@ -22,7 +22,7 @@ import hdlparse.verilog_parser as vlog
 
 from hdlparse.vhdl_parser import VhdlComponent, VhdlEntity, VhdlParameterType
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 log = logging.getLogger(__name__)
 
