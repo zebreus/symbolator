@@ -596,7 +596,6 @@ def parse_vhdl(text):
         elif action == 'array_range_end':
             if l_bound and r_bound and direction:
                 arange = " ".join([l_bound, direction, r_bound])
-                print("arange -> ", arange)
             else:
                 arange = text[array_range_start_pos:pos[0] + 1]
             # arange = arange.strip().lstrip("(")
@@ -753,8 +752,6 @@ class VhdlExtractor:
                 objects = parse_vhdl(text)
                 self.object_cache[fname] = objects
                 self._register_array_types(objects)
-
-        print("objects=", objects)
 
         if type_filter:
             if not isinstance(type_filter, list):
