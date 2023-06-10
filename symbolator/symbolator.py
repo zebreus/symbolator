@@ -22,7 +22,7 @@ import hdlparse.verilog_parser as vlog
 
 from hdlparse.vhdl_parser import VhdlComponent, VhdlEntity, VhdlParameterType
 
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 
 log = logging.getLogger("symbolator")
 

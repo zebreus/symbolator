@@ -326,7 +326,7 @@ self: super: {
   };
   "symbolator" = super.buildPythonPackage rec {
     pname = "symbolator";
-    version = "1.2.0";
+    version = "1.2.1";
     src = ./.;
     format = "setuptools";
     doCheck = false;
