@@ -76,3 +76,24 @@ jobs:
           file: symbolator-arx
           tag: ${{ github.ref }}
           overwrite: true
+  publish-dockerhub:
+    name: "Publish to dockerhub"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: docker login
+        env:
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag ${{secrets.DOCKER_USER}}/symbolator:latest
+
+      - name: Docker Push
+        run: |
+          RELEASE_TAG=${GITHUB_REF#refs/tags/}
+          docker tag ${{secrets.DOCKER_USER}}/symbolator:latest ${{secrets.DOCKER_USER}}/symbolator:$RELEASE_TAG
+          docker push ${{secrets.DOCKER_USER}}/symbolator:latest
+          docker push ${{secrets.DOCKER_USER}}/symbolator:$RELEASE_TAG
