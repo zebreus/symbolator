@@ -1,6 +1,6 @@
 [project]
 name = "symbolator"
-version = "1.1.1"
+version = "1.2.0"
 authors = [{ name = "Kevin Thibedeau", email = "kevin.thibedeau@gmail.com" }]
 maintainers = [{ name = "Zebreus", email = "lennart@madmanfred.com" }]
 readme = "README.md"
