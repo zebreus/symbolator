@@ -49,6 +49,8 @@ Symbolator requires Python 3.x, Pycairo, and Pango.
 
 The Pango library is used compute the dimensions of a text layout. There is no standard package to get the Pango Python bindings installed. It is a part of the Gtk+ library which is accessed either through the PyGtk or PyGObject APIs, both of which are supported by Symbolator. You should make sure that one of these libraries is available before installing Symbolator. A [Windows installer](https://www.pygtk.org/downloads.html) is available. For Linux distributions you should install the relevant libraries with your package manager.
 
+To build symbolator from source you need a setuptools with a version >= 61.0.0 and pip >= 23.0.0.
+
 If you are running linux you can use the nix package manager to build and run symbolator without installing it:
 
 ```bash
