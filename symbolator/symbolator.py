@@ -772,10 +772,10 @@ def main():
             nc.render(args.transparent)
 
             print('Created {} from {} ({})'.format(fname, comp.name, source), file=sys.stderr)
-    if args.component != "" and found_filter_component == 0
+    if args.component != "" and found_filter_component == 0:
         log.error(f"No diagrams were generated, because component {args.component} was not found")
         sys.exit(2)
-    if args.component != "" and found_filter_component > 1
+    if args.component != "" and found_filter_component > 1:
         log.warn(f"Found the requested component {args.component} {found_filter_component} times. The generated diagram contains only the last one.")
 
 if __name__ == "__main__":
