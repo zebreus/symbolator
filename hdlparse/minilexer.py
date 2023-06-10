@@ -5,14 +5,7 @@
 import re
 import logging
 
-
 log = logging.getLogger(__name__)
-
-if not log.handlers:  # only add the handler if no handlers are already registered
-    handler = logging.StreamHandler()
-    handler.setFormatter(logging.Formatter('%(name)s - %(levelname)s - %(message)s'))
-    log.addHandler(handler)
-
 
 class MiniLexer():
     """Simple lexer state machine with regex matching rules"""

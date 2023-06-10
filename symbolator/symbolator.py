@@ -24,7 +24,7 @@ from hdlparse.vhdl_parser import VhdlComponent, VhdlEntity, VhdlParameterType
 
 __version__ = "1.1.1"
 
-log = logging.getLogger(__name__)
+log = logging.getLogger("symbolator")
 
 
 def xml_escape(txt):
@@ -560,12 +560,19 @@ def parse_args():
         help="Add libname above cellname, and move component name to bottom. Works only with --title",
     )
     parser.add_argument(
-        "--debug",
+        '--debug',
+        help="Print debug messages.",
         action="store_const",
         dest="loglevel",
         const=logging.DEBUG,
-        default=logging.INFO,
-        help="Print debug messages.",
+        default=logging.WARNING,
+    )
+    parser.add_argument(
+        '--verbose',
+        help="Print more verbose output.",
+        action="store_const",
+        dest="loglevel",
+        const=logging.INFO,
     )
 
     args, unparsed = parser.parse_known_args()
@@ -581,11 +588,11 @@ def parse_args():
     if (
         args.input == "-" and args.output is None
     ):  # Reading from stdin: must have full output file name
-        log.critical("Error: Output file is required when reading from stdin")
+        log.error("Output file is required when reading from stdin")
         sys.exit(1)
 
     if args.libname != "" and not args.title:
-        log.critical("Error: '--title' is required when using libname")
+        log.error("'--title' is required when using libname")
         sys.exit(1)
 
     # Remove duplicates
@@ -645,7 +652,7 @@ def main():
         vhdl_ex.save_array_types(args.save_lib)
 
     if not args.input:
-        log.critical("Error: Please provide a proper input file")
+        log.error("Please provide a proper input file")
         sys.exit(0)
 
     log.debug(f"args.input={args.input}")
@@ -670,7 +677,7 @@ def main():
         elif os.path.isdir(args.input):
             flist = file_search(args.input, extensions=(".vhdl", ".vhd", ".vlog", ".v"))
         else:
-            log.critical("Error: Invalid input source")
+            log.error("Invalid input source")
             sys.exit(1)
 
         all_components = dict()
@@ -736,7 +743,7 @@ def main():
                 if args.output:
                     fname = os.path.join(args.output, fname)
             log.info(
-                'Creating symbol for {} "{}"\n\t-> {}'.format(source, comp.name, fname)
+                'Creating symbol for "{}" from {} as {}'.format(comp.name, source, fname)
             )
             if args.format == "svg":
                 surf = SvgSurface(fname, style, padding=5, scale=args.scale)
@@ -751,6 +758,7 @@ def main():
 
             nc.render(args.transparent)
 
+            print('Created {} from {} ({})'.format(fname, comp.name, source), file=sys.stderr)
 
 if __name__ == "__main__":
     main()
