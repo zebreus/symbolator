@@ -532,6 +532,13 @@ def parse_args():
         help="Scale image",
     )
     parser.add_argument(
+        "--component",
+        dest="component",
+        action="store",
+        default="",
+        help="Only generate a diagram for the component with this name",
+    )
+    parser.add_argument(
         "--title",
         dest="title",
         action="store_true",
@@ -731,9 +738,15 @@ def main():
         None,
     )
 
+    found_filter_component = 0
     # Render every component from every file into an image
     for source, (extractor, components) in all_components.items():
         for comp in components:
+            if args.component != "" and args.component != comp.name:
+                log.info(f"Skipping {comp.name} ({source}) because of --component filter")
+                continue
+            if args.component != "" and args.component == comp.name:
+                found_filter_component = found_filter_component + 1
             log.debug(f"source: {source} component: {comp}")
             comp.name = comp.name.strip("_")
             if source == "<stdin>" or args.output_as_filename:
@@ -759,6 +772,11 @@ def main():
             nc.render(args.transparent)
 
             print('Created {} from {} ({})'.format(fname, comp.name, source), file=sys.stderr)
+    if args.component != "" and found_filter_component == 0
+        log.error(f"No diagrams were generated, because component {args.component} was not found")
+        sys.exit(2)
+    if args.component != "" and found_filter_component > 1
+        log.warn(f"Found the requested component {args.component} {found_filter_component} times. The generated diagram contains only the last one.")
 
 if __name__ == "__main__":
     main()
