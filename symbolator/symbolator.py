@@ -173,7 +173,7 @@ class PinSection:
             }
 
         if name is not None:
-            m = re.match(r"^([^\|]+)\s*(\|(\w*))?$", name)
+            m = re.match(r"^([^\|]+)\s*(\|(.*))?$", name)
             if m:
                 self.name = m.group(3)
                 if self.name is not None:
