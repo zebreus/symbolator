@@ -43,7 +43,27 @@ Produces the following:
 
 Symbolator can render to PNG bitmap images or SVG, PDF, PS, and EPS vector images. SVG is the default.
 
-## Requirements
+## Getting symbolator
+
+There are some ways to run symbolator that dont require installing local dependencies:
+
+You can run a prebuilt docker container with symbolator using the following command:
+
+.. code-block:: sh
+
+  > docker run --rm -it -v $(pwd):/src madmanfred/symbolator
+
+Another way to run symbolizer is through the nix package manager with the command:
+
+  > nix run github:zebreus/symbolator
+
+There also is a AppImage available on GitHub releases.
+
+## Installing symbolator from source
+
+Symbolator is a Python application. You must have Python installed first to use it. Most modern Linux distributions and OS/X have it available by default. There are a number of options available for Windows. If you don't already have a favorite, I recommend getting one of the `"full-stack" Python distros <https://www.scipy.org/install.html>`_ that are geared toward scientific computing such as Anaconda or Python(x,y).
+
+If your OS has a package manager, it may be preferable to install Python setuptools through that tool before attempting to install Symbolator. Otherwise, the installation script will install these packages directly without registering them with the OS package manager.
 
 Symbolator requires Python 3.x, Pycairo, and Pango.
 
@@ -51,11 +71,27 @@ The Pango library is used compute the dimensions of a text layout. There is no s
 
 To build symbolator from source you need a setuptools with a version >= 61.0.0 and pip >= 23.0.0.
 
-If you are running linux you can use the nix package manager to build and run symbolator without installing it:
+When these requirements are met you can install symbolator from github using:
 
-```bash
-nix run github:Zebreus/symbolator
-```
+.. code-block:: sh
+
+  > pip install --upgrade git+https://github.com/zebreus/symbolator.git
+
+If you manually downloaded a source package or created a clone with Git you can install Symbolator with the following command run from the base Symbolator directory:
+
+.. code-block:: sh
+
+  > pip install .
+
+After a successful install the Symbolator command line application will be available. On Linux they should be immediately accessible from your current search path. On Windows you will need to make sure that the ``<Python root>\Scripts`` directory is in your %PATH% environment variable.
+
+You may need to update to recent versions of setuptools (at least 61) and pip (at least 23) to install symbolator. You can upgrade them to the latest versions using the following command:
+
+.. code-block:: sh
+
+  > pip install --upgrade pip setuptools
+
+On Linux systems you may need to install with root privileges using the *sudo* command.
 
 ## Licensing
 

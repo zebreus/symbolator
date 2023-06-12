@@ -74,11 +74,11 @@ Symbolator is a Python application. You must have Python installed first to use 
 
 If your OS has a package manager, it may be preferable to install Python setuptools through that tool before attempting to install Symbolator. Otherwise, the installation script will install these packages directly without registering them with the OS package manager.
 
-The easiest way to install Symbolator is from `PyPI <https://pypi.python.org/pypi/symbolator>`_.
+The easiest way to install Symbolator currently from GitHub
 
 .. code-block:: sh
 
-  > pip install --upgrade symbolator
+  > pip install --upgrade git+https://github.com/zebreus/symbolator.git
 
 This will download and install the latest release, upgrading if you already have it installed. If you don't have ``pip`` you may have the ``easy_install`` command available which can be used to install ``pip`` on your system:
 
@@ -87,23 +87,35 @@ This will download and install the latest release, upgrading if you already have
   > easy_install pip
 
 
-You can also use ``pip`` to get the latest development code from Github:
-
-.. code-block:: sh
-
-  > pip install --upgrade https://github.com/zebreus/symbolator/tarball/master
-
 If you manually downloaded a source package or created a clone with Git you can install Symbolator with the following command run from the base Symbolator directory:
 
 .. code-block:: sh
 
-  > python setup.py install
+  > pip install .
+
+You may need to update to recent versions of setuptools (at least 61) and pip (at least 23) to install symbolator. You can upgrade them to the latest versions using the following command:
+
+.. code-block:: sh
+
+  > pip install --upgrade pip setuptools
 
 On Linux systems you may need to install with root privileges using the *sudo* command.
 
 After a successful install the Symbolator command line application will be available. On Linux they should be immediately accessible from your current search path. On Windows you will need to make sure that the ``<Python root>\Scripts`` directory is in your %PATH% environment variable.
 
-If you can't use the installer script, it is possible to use ``symbolator.py`` directly without installation using Python 3.x.
+There are some ways to run symbolator that dont require installing local dependencies:
+
+You can run a prebuilt docker container with symbolator using the following command:
+
+.. code-block:: sh
+
+  > docker run --rm -it -v $(pwd):/src madmanfred/symbolator
+
+Another way to run symbolizer is through the nix package manager with the command:
+
+  > nix run github:Zebreus/symbolator
+
+There also is a AppImage available on github releases.
 
 Command line
 ------------
